@@ -13,3 +13,12 @@ def load_schema
 end
 
 load_schema
+
+class ActionController::TestCase
+  private
+    def get_json(*args)
+      response = get(*args)
+      assert_response :success
+      ActiveSupport::JSON::decode(response.body)
+    end
+end

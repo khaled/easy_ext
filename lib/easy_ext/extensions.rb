@@ -9,6 +9,11 @@ module EasyExt
         table = EasyExt::Grid.new(name, options, &proc)
         table.add_controller_actions(self)
       end
+      
+      def renders_ext_tree(name, options={}, &proc)
+        tree = EasyExt::Tree.new(name, options, &proc)
+        tree.add_controller_action(self)
+      end
     end
   end
 end

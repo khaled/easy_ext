@@ -154,12 +154,5 @@ class GridTest < ActionController::TestCase
   
   test "Should not fail if sort field for column is unknown" do
     get :item_with_custom_column_grid_data, :sort => "col_1"
-  end
-  
-private
-  def get_json(*args)
-    response = get(*args)
-    assert_response :success
-    ActiveSupport::JSON::decode(response.body)
-  end
+  end  
 end
