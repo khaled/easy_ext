@@ -1,18 +1,26 @@
 module EasyExt
+  #
+  #  Handles data rendering for an Ext JS grid.
+  #
   class Grid
 
     #
     # Options:
-    #  :scope => lambda { <something that quacks like an ActiveRecord scope> }
+    # * <tt>:scope</tt> - A proc that returns an ActiveRecord scope, or something that
+    #   quacks like one.  The proc is evaluated with controller scope so that it can,
+    #   for example, have access to controller params.
     #
-    def initialize(name, options={}, &proc)
+    #   Example:
+    #     :scope => lambda { Item.where(:value => params[:value]) }
+    #
+    def initialize(name, options={}, &config_proc)
       verify_options(options)
       @name = name
       @options = options
       @columns = []
       default_sort_table nil
       row_id { |item| item.id }
-      instance_eval(&proc) if proc
+      instance_eval(&config_proc) if config_proc
     end
 
     #
@@ -101,7 +109,7 @@ module EasyExt
     end
   
     #
-    # Add actions for this grid to the given controller class
+    # Adds actions for this grid to the given controller class.
     #
     def add_controller_actions(controller_class)
       grid = self
@@ -142,10 +150,6 @@ module EasyExt
         "#{@name.to_s}_grid_data"
       end
   
-      #
-      # Returns a hash representing the attribute/values
-      # for a particular row of the grid
-      #
       def compute_row_for(record, controller)
         result = {}
         @columns.each do |column|
